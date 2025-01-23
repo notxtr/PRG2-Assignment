@@ -15,13 +15,13 @@ public class Flight
 
     public string Status { get { return status; } set { status = value; } }
 
-    public Flight(string flightNumber, string origin, string destination, DateTime expectedTime, string status)
+    public Flight(string _flightNumber, string _origin, string _destination, DateTime _expectedTime, string _status)
     {
-        this.flightNumber = flightNumber;
-        this.origin = origin;
-        this.destination = destination;
-        this.expectedTime = expectedTime;
-        this.status = status;
+        _flightNumber = flightNumber;
+        _origin = origin;
+        _destination = destination;
+        _expectedTime = expectedTime;
+        _status = status;
     }
 
     public void CalculateFees(double fee)
