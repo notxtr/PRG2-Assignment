@@ -30,6 +30,6 @@ public class Flight
     }
     public override string ToString()
     {
-        return "Flight Number: " + flightNumber + ", Origin: " + origin + ", Destination: " + destination + ", Expected Time: " + expectedTime + ", Status: " + status;
+        return "Flight Number: " + FlightNumber + ", Origin: " + Origin + ", Destination: " + Destination + ", Expected Time: " + ExpectedTime + ", Status: " + Status;
     }
 }
