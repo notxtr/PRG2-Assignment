@@ -57,12 +57,12 @@ namespace PRG2REAL_assignment
         public double CalculateFees()
         {
             double totalBill = 0;
-            int NumOfFlights = flightDict.Count;
+            int NumOfFlights = flightDict.Count; // Number of flights for the airline
 
             // Find fees for each flight
             foreach (KeyValuePair<string, Flight> f in flightDict)
             {
-                totalBill = f.Value.CalculatePrice();
+                totalBill = f.Value.CalculatePrice(); // set totalBill as base fee
             }
 
             // 3% discount for airlines with more than 5 flights
