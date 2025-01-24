@@ -1,5 +1,9 @@
 ﻿using System;
-
+//==========================================================
+// Student Number : S10267163
+// Student Name : Caden Wong
+// Partner Name : Aidan Foo
+//==========================================================
 public class LWTTFlight : Flight
 {
     private double requestFee;

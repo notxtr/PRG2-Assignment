@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-
+//==========================================================
+// Student Number : S10267163
+// Student Name : Caden Wong
+// Partner Name : Aidan Foo
+//==========================================================
 public class Flight
 {
     private string flightNumber;
