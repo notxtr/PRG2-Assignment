@@ -12,7 +12,7 @@ namespace PRG2REAL_assignment
         // Attributes
         private string name;
         private string code;
-        private Dictionary<string, Flight> flightDict = new Dictionary<string, Flight>();
+        private Dictionary<string, Flight> flights = new Dictionary<string, Flight>();
 
         // Properties
         public string Name
@@ -27,7 +27,7 @@ namespace PRG2REAL_assignment
             set { code = value; }
         }
 
-        public Dictionary<string, Flight> FlightDict { get; set; } = new Dictionary<string, Flight>();
+        public Dictionary<string, Flight> Flights { get; set; } = new Dictionary<string, Flight>();
 
         // Default constructor
         public Airline() { }
@@ -42,13 +42,13 @@ namespace PRG2REAL_assignment
         // Method to add flight
         public bool AddFlight(Flight f)
         {
-            if (flightDict.ContainsKey(f.FlightNumber)) // check if flight number already exists
+            if (flights.ContainsKey(f.FlightNumber)) // check if flight number already exists
             {
                 return false;
             }
             else
             {
-                flightDict.Add(f.FlightNumber, f);
+                flights.Add(f.FlightNumber, f);
                 return true;
             }
         }
@@ -57,10 +57,10 @@ namespace PRG2REAL_assignment
         public double CalculateFees()
         {
             double totalBill = 0;
-            int NumOfFlights = flightDict.Count; // Number of flights for the airline
+            int NumOfFlights = flights.Count; // Number of flights for the airline
 
             // Find fees for each flight
-            foreach (KeyValuePair<string, Flight> f in flightDict)
+            foreach (KeyValuePair<string, Flight> f in flights)
             {
                 totalBill = f.Value.CalculatePrice(); // set totalBill as base fee
             }
@@ -76,7 +76,7 @@ namespace PRG2REAL_assignment
             totalBill = totalBill - (350 * stacks);
 
             // Implement other discounts 
-            foreach (flight f in flightDict.Values)
+            foreach (flight f in flights.Values)
             {
                 if (f.expectedTime < TimeSpan(11, 0, 0) || f.expectedTime > TimeSpan(21, 0, 0))
                 {
@@ -97,7 +97,7 @@ namespace PRG2REAL_assignment
         // Method to remove flight
         public bool RemoveFlight(Flight f)
         {
-            return flightDict.Remove(f.FlightNumber);
+            return flights.Remove(f.FlightNumber);
         }
 
         // ToString method
