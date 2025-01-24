@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 public class Flight
 {
@@ -17,19 +18,103 @@ public class Flight
 
     public Flight(string _flightNumber, string _origin, string _destination, DateTime _expectedTime, string _status)
     {
-        _flightNumber = flightNumber;
-        _origin = origin;
-        _destination = destination;
-        _expectedTime = expectedTime;
-        _status = status;
+        FlightNumber = _flightNumber;
+        Origin = _origin;
+        Destination = _destination;
+        ExpectedTime  = _expectedTime;
+        Status = _status;
     }
 
-    public void CalculateFees(double fee)
+    public double CalculateFees(double fee)
     {
+        fee = 300;
+        if (Origin == "Singapore (SIN)")
+        {
+            fee += 800;
+        }
+        else if (Destination == "Singapore (SIN)")
+        {
+            fee += 500;
+        }
 
+        return fee;
     }
     public override string ToString()
     {
-        return "Flight Number: " + FlightNumber + ", Origin: " + Origin + ", Destination: " + Destination + ", Expected Time: " + ExpectedTime + ", Status: " + Status;
+        return $"{FlightNumber}\t{Origin}\t\t{Destination}\t\t{ExpectedTime}";
+    }
+}
+
+public class NORMFlight : Flight
+{
+    public NORMFlight(string fn, string o, string d, DateTime et, string s) : base(fn, o, d, et, s) { }
+    public void CalculateFees(double fee) { }
+
+    public override string ToString()
+    {
+        return base.ToString();
+    }
+}
+
+public class CFFTFlight : Flight
+{
+    private double requestFee;
+    public double RequestFee { get { return requestFee; } set { requestFee = value; } }
+    public CFFTFlight(string fn, string o, string d, DateTime et, string s) : base(fn, o, d, et, s) { }
+
+
+    public double CalculateFees(double fee)
+    {
+        fee = base.CalculateFees(fee);
+        RequestFee = 150;
+        fee += RequestFee;
+        return fee;
+    }
+
+    public override string ToString()
+    {
+        return base.ToString();
+    }
+}
+
+public class DDJBFlight : Flight
+{
+    private double requestFee;
+    public double RequestFee { get { return requestFee; } set { requestFee = value; } }
+    public DDJBFlight(string fn, string o, string d, DateTime et, string s) : base(fn, o, d, et, s) { }
+
+
+    public double CalculateFees(double fee)
+    {
+        fee = base.CalculateFees(fee);
+        RequestFee = 300;
+        fee += RequestFee;
+        return fee;
+    }
+
+    public override string ToString()
+    {
+        return base.ToString();
+    }
+}
+
+public class LWTTFlight : Flight
+{
+    private double requestFee;
+    public double RequestFee { get { return requestFee; } set { requestFee = value; } }
+    public LWTTFlight(string fn, string o, string d, DateTime et, string s) : base(fn, o, d, et, s) { }
+
+
+    public double CalculateFees(double fee)
+    {
+        fee = base.CalculateFees(fee);
+        RequestFee = 500;
+        fee += RequestFee;
+        return fee;
+    }
+
+    public override string ToString()
+    {
+        return base.ToString();
     }
 }
