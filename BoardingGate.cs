@@ -35,9 +35,9 @@ namespace PRG2REAL_assignment
             Flight = f;
         }
         // Method to calculate fees
-        public double CalculateFees()
+        public double CalculateFees(double fee)
         {
-            return Flight.CalculateFees();
+            return Flight.CalculateFees(fee);
         }
 
         // ToString method 

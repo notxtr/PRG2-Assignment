@@ -14,7 +14,7 @@ void CreateFlightObject()
 
 }
 
-
+List<Airline> airlineList = new List<Airline>();
 bool trueornot = true;
 while (trueornot == true)
 {
