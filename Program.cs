@@ -65,36 +65,6 @@ void CreateBoardingGateObject(List<BoardingGate> boardingGateList)
     }
 }
 
-// Method to create Flight objects
-void CreateFlightObject(List<Flight> flightList)
-{
-    using (StreamReader str = new StreamReader("flights.csv"))
-    {
-        string line;
-        str.ReadLine(); // Skip the header
-
-        while ((line = str.ReadLine()) != null)
-        {
-            string[] flightparts = line.Split(',');
-            string flightnumber = flightparts[0];
-            string origin = flightparts[1];
-            string destination = flightparts[2];
-            DateTime estimatedtime = Convert.ToDateTime(flightparts[3]);
-            string status = flightparts[4];
-
-            // Create the appropriate flight type based on status
-            Flight flight = status switch
-            {
-                "DDJB" => new DDJBFlight(flightnumber, origin, destination, estimatedtime, status),
-                "" => new CFFTFlight(flightnumber, origin, destination, estimatedtime, status),
-                "LWTT" => new LWTTFlight(flightnumber, origin, destination, estimatedtime, status),
-                _ => new NORMFlight(flightnumber, origin, destination, estimatedtime, status)
-            };
-
-            flightList.Add(flight);
-        }
-    }
-}
 
 
 
@@ -104,7 +74,6 @@ while (trueornot == true)
     DisplayMenu();
     CreateAirlineObject(AirlineList);
     CreateBoardingGateObject(BoardingGateList);
-    CreateFlightObject(FlightList);
     Console.WriteLine("Please select your option: ");
     int option = Convert.ToInt32(Console.ReadLine());
     switch (option)
