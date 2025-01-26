@@ -45,25 +45,30 @@ void CreateBoardingGateObject(List<BoardingGate> boardingGateList, List<Flight> 
             bool cfft = Convert.ToBoolean(parts[2]);
             bool lwtt = Convert.ToBoolean(parts[3]);
 
-            if (ddjb == true)
+            using (StreamReader str = new StreamReader("flights.csv"))
             {
-           
-                flightList.Add(new DDJBFlight(boardinggate, ddjb, cfft, lwtt));
-            }
-            else if (cfft == true)
-            {
-                flightList.Add(new CFFTFlight(boardinggate, ddjb, cfft, lwtt));
-            }
-            else if (lwtt == true)
-            {
-                flightList.Add(new CFFTFlight(boardinggate, ddjb, cfft, lwtt));
-            }
-            else
-            {
-                flightList.Add(new NORMFlight(boardinggate, ddjb, cfft, lwtt));
+                if (ddjb == true)
+                {
+
+                    flightList.Add(new DDJBFlight(boardinggate, ddjb, cfft, lwtt));
+                }
+                else if (cfft == true)
+                {
+                    flightList.Add(new CFFTFlight(boardinggate, ddjb, cfft, lwtt));
+                }
+                else if (lwtt == true)
+                {
+                    flightList.Add(new CFFTFlight(boardinggate, ddjb, cfft, lwtt));
+                }
+                else
+                {
+                    flightList.Add(new NORMFlight(boardinggate, ddjb, cfft, lwtt));
+                }
             }
 
-                boardingGateList.Add(new BoardingGate(boardinggate, ddjb, cfft, lwtt,));
+            
+
+            boardingGateList.Add(new BoardingGate(boardinggate, ddjb, cfft, lwtt,));
 
         }
     }

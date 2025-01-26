@@ -11,9 +11,9 @@ public class LWTTFlight : Flight
     public LWTTFlight(string fn, string o, string d, DateTime et, string s) : base(fn, o, d, et, s) { }
 
 
-    public double CalculateFees(double fee)
+    public double CalculateFees()
     {
-        fee = base.CalculateFees(fee);
+        double fee = base.CalculateFees();
         RequestFee = 500;
         fee += RequestFee;
         return fee;

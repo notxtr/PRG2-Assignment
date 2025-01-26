@@ -29,14 +29,14 @@ public class Flight
         Status = _status;
     }
 
-    public double CalculateFees(double fee)
+    public double CalculateFees()
     {
-        fee = 300;
-        if (Origin == "Singapore (SIN)")
+        double fee = 300;
+        if (Origin == "Singapore (SIN)") // Departing flight fee
         {
             fee += 800;
         }
-        else if (Destination == "Singapore (SIN)")
+        else if (Destination == "Singapore (SIN)") // Arriving flight fee
         {
             fee += 500;
         }

@@ -42,13 +42,13 @@ namespace PRG2REAL_assignment
         // Method to add flight
         public bool AddFlight(Flight f)
         {
-            if (flights.ContainsKey(f.FlightNumber)) // check if flight number already exists
+            if (Flights.ContainsKey(f.FlightNumber)) // check if flight number already exists
             {
                 return false;
             }
             else
             {
-                flights.Add(f.FlightNumber, f);
+                Flights.Add(f.FlightNumber, f);
                 return true;
             }
         }
@@ -57,10 +57,10 @@ namespace PRG2REAL_assignment
         public double CalculateFees()
         {
             double totalBill = 0;
-            int NumOfFlights = flights.Count; // Number of flights for the airline
+            int NumOfFlights = Flights.Count; // Number of flights for the airline
 
             // Find fees for each flight
-            foreach (KeyValuePair<string, Flight> f in flights)
+            foreach (KeyValuePair<string, Flight> f in Flights)
             {
                 totalBill = f.Value.CalculateFees(); // set totalBill as base fee
             }
@@ -76,7 +76,7 @@ namespace PRG2REAL_assignment
             totalBill = totalBill - (350 * stacks);
 
             // Implement other discounts 
-            foreach (Flight f in flights.Values)
+            foreach (Flight f in Flights.Values)
             {
                 if (f.ExpectedTime < TimeSpan(11, 0, 0) || f.ExpectedTime > TimeSpan(21, 0, 0))
                 {
@@ -97,7 +97,7 @@ namespace PRG2REAL_assignment
         // Method to remove flight
         public bool RemoveFlight(Flight f)
         {
-            return flights.Remove(f.FlightNumber);
+            return Flights.Remove(f.FlightNumber);
         }
 
         // ToString method
