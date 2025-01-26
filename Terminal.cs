@@ -52,11 +52,11 @@ namespace PRG2REAL_assignment
         // Method to add boarding gate
         public bool AddBoardingGate(BoardingGate bd)
         {
-            if (boardingGates.ContainsKey(bd.GateName)) // check if boarding gate already exists
+            if (BoardingGates.ContainsKey(bd.GateName)) // check if boarding gate already exists
                 return false;
             else
             {
-                boardingGates.Add(bd.GateName, bd);
+                BoardingGates.Add(bd.GateName, bd);
                 return true;
             }
         }
