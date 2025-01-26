@@ -52,11 +52,12 @@ namespace PRG2REAL_assignment
         // Method to add boarding gate
         public bool AddBoardingGate(BoardingGate bd)
         {
-            if (boardingGates.ContainsKey(bd.gateName)) // check if boarding gate already exists
+            if (boardingGates.ContainsKey(bd.GateName)) // check if boarding gate already exists
                 return false;
             else
             {
-                boardingGates.Add(bd.gateName, bd);
+                boardingGates.Add(bd.GateName, bd);
+                return true;
             }
         }
 
@@ -65,7 +66,7 @@ namespace PRG2REAL_assignment
         {
             foreach (Airline a in airlines.Values)
             {
-                if (a.Flights.ContainsKey(f.flightNumber))
+                if (a.Flights.ContainsKey(f.FlightNumber))
                 {
                     return a;
                 }

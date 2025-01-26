@@ -62,7 +62,7 @@ namespace PRG2REAL_assignment
             // Find fees for each flight
             foreach (KeyValuePair<string, Flight> f in flights)
             {
-                totalBill = f.Value.CalculatePrice(); // set totalBill as base fee
+                totalBill = f.Value.CalculateFees(); // set totalBill as base fee
             }
 
             // 3% discount for airlines with more than 5 flights
@@ -76,13 +76,13 @@ namespace PRG2REAL_assignment
             totalBill = totalBill - (350 * stacks);
 
             // Implement other discounts 
-            foreach (flight f in flights.Values)
+            foreach (Flight f in flights.Values)
             {
-                if (f.expectedTime < TimeSpan(11, 0, 0) || f.expectedTime > TimeSpan(21, 0, 0))
+                if (f.ExpectedTime < TimeSpan(11, 0, 0) || f.ExpectedTime > TimeSpan(21, 0, 0))
                 {
                     totalBill -= 110;
                 }
-                if (f.origin == "DXB" || f.origin == "BKK" || f.origin == "NRT")
+                if (f.Origin == "DXB" || f.Origin == "BKK" || f.Origin == "NRT")
                 {
                     totalBill -= 25;
                 }
