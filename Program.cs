@@ -83,7 +83,44 @@ void ListAllFlights(List<Airline> airlineList)
         Console.WriteLine(airline.ToString());
     }
     Console.WriteLine("\nEnter Airline code: ");
-    string code = Console.ReadLine();   
+    string code = Console.ReadLine();
+    bool notfound = true; // Boolean for checking if airline code is found
+    foreach (var airline in airlineList)
+    {
+        if (airline.Code == code)
+        {
+            notfound = false;
+            Console.WriteLine($"=============================================\r\nList of Flights for {airline.Name}\r\n=============================================");
+            Console.WriteLine("FlightNumber\tOrigin\t\tDestination\t\tExpectedTime");
+            foreach (var flight in airline.Flights.Values)
+            {
+                Console.WriteLine(flight.ToString());
+            }
+
+            Console.WriteLine("Enter a specific flight number to view details: ");
+            string flightnumber = Console.ReadLine();
+            bool notfound2 = true; // Boolean for checking if flight number is found
+            foreach (var specificflight in airline.Flights.Values)
+            {
+
+                if (specificflight.FlightNumber == flightnumber)
+                {
+                    notfound2 = false;
+                    Console.WriteLine("=============================================\r\nFlight Details\r\n=============================================");
+                    Console.WriteLine();
+                    Console.WriteLine(specificflight.ToString());
+                }
+            }
+            if (notfound2)
+            {
+                Console.WriteLine("Flight number not found.");
+            }
+        }
+    } 
+    if (notfound)
+    {
+        Console.WriteLine("Airline code not found.");
+    }
 }
 
 CreateAirlineObject(AirlineList);
@@ -92,35 +129,50 @@ bool trueornot = true;
 while (trueornot == true)
 {
     DisplayMenu();
+
     Console.WriteLine("Please select your option: ");
-    int option = Convert.ToInt32(Console.ReadLine());
-    switch (option)
+    try
     {
-        case 0:
-            trueornot = false;
-            Console.WriteLine("Goodbye!");  
-            break;
-
-        case 1:
-            break;
-        case 2:
-            ListAllBoardingGates(BoardingGateList);
-            break;
-        case 3:
-            break;
-        case 4:
-            break;
-        case 5:
-            ListAllFlights(AirlineList);
-            break;
-        case 6:
-            break;
-        case 7:
-            break;
-        default:
-            Console.WriteLine("Invalid option. Please try again.");
-            break;
-
+        int option = Convert.ToInt32(Console.ReadLine());
+        switch (option)
+        {
+            case 1:
+                break;
+            case 2:
+                ListAllBoardingGates(BoardingGateList);
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                ListAllFlights(AirlineList);
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 0:
+                trueornot = false;
+                break;
+            default:
+                Console.WriteLine("Invalid integer. Please try again.");
+                break;
+        }
     }
+    
+    catch (FormatException)
+    {
+        Console.WriteLine("Invalid input. Please try again.");
+    }
+    catch (OverflowException)
+    {
+        Console.WriteLine("Invalid input. Please try again.");
+    }
+        
+        
 }
+
+
+
 
