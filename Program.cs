@@ -65,15 +65,33 @@ void CreateBoardingGateObject(List<BoardingGate> boardingGateList)
     }
 }
 
+// Display all boarding gates
+void ListAllBoardingGates(List<BoardingGate> boardingGateList)
+{
+    foreach (var boardingGate in boardingGateList)
+    {
+        Console.WriteLine(boardingGate.ToString());
+    }
+}
 
+// Display all flights through airline list
+void ListAllFlights(List<Airline> airlineList)
+{
+    Console.WriteLine("=============================================\r\nList of Airlines for Changi Airport Terminal 5\r\n=============================================");
+    foreach (var airline in airlineList)
+    {
+        Console.WriteLine(airline.ToString());
+    }
+    Console.WriteLine("\nEnter Airline code: ");
+    string code = Console.ReadLine();   
+}
 
-
+CreateAirlineObject(AirlineList);
+CreateBoardingGateObject(BoardingGateList);
 bool trueornot = true;
 while (trueornot == true)
 {
     DisplayMenu();
-    CreateAirlineObject(AirlineList);
-    CreateBoardingGateObject(BoardingGateList);
     Console.WriteLine("Please select your option: ");
     int option = Convert.ToInt32(Console.ReadLine());
     switch (option)
@@ -86,12 +104,14 @@ while (trueornot == true)
         case 1:
             break;
         case 2:
+            ListAllBoardingGates(BoardingGateList);
             break;
         case 3:
             break;
         case 4:
             break;
         case 5:
+            ListAllFlights(AirlineList);
             break;
         case 6:
             break;

@@ -103,7 +103,7 @@ namespace PRG2REAL_assignment
         // ToString method
         public override string ToString()
         {
-            return $"{Name} {Code}";
+            return $"{Name} : {Code}";
         }
     }
 }
