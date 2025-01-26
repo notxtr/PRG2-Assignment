@@ -78,7 +78,7 @@ namespace PRG2REAL_assignment
             // Implement other discounts 
             foreach (Flight f in Flights.Values)
             {
-                if (f.ExpectedTime < TimeSpan(11, 0, 0) || f.ExpectedTime > TimeSpan(21, 0, 0))
+                if (f.ExpectedTime.TimeOfDay < new TimeSpan(11, 0, 0) || f.ExpectedTime.TimeOfDay > new TimeSpan(21, 0, 0))
                 {
                     totalBill -= 110;
                 }
