@@ -37,7 +37,7 @@ namespace PRG2REAL_assignment
         // ToString method
         public override string ToString()
         {
-            return base.ToString();
+            return base.ToString()+$"\t\t{ExpectedTime}\t\t{Status}";
         }
     }
 }

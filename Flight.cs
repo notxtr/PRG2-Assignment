@@ -52,7 +52,7 @@ namespace PRG2REAL_assignment
         // ToString method 
         public override string ToString()
         {
-            return $"{FlightNumber}\t{Origin}\t\t{Destination}\t\t{ExpectedTime}";
+            return $"{FlightNumber}\t{Origin}\t\t{Destination}";
         }
     }
 }
