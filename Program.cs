@@ -310,7 +310,7 @@ while (trueornot == true)
 {
     DisplayMenu();
 
-    Console.WriteLine("Please select your option: ");
+    Console.WriteLine("Please select an option: ");
     try
     {
         int option = Convert.ToInt32(Console.ReadLine());
