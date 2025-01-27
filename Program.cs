@@ -401,6 +401,7 @@ while (trueornot == true)
                 break;
             case 0:
                 trueornot = false;
+                Console.WriteLine("Goodbye!");
                 break;
             default:
                 Console.WriteLine("Invalid integer. Please try again.");
