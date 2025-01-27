@@ -124,7 +124,7 @@ void ListAllFlights(List<Airline> airlineList)
 }
 
 // Modify flight details
-void ModifyFlight(List<Flight> flightList)
+void ModifyFlight(List<BoardingGate> boardingGateList)
 {
     Console.WriteLine("=============================================\r\nList of Airlines for Changi Airport Terminal 5\r\n=============================================");
     foreach (var airline in AirlineList)
@@ -151,12 +151,13 @@ void ModifyFlight(List<Flight> flightList)
             bool notfound2 = true; // Boolean for checking if flight number is found
             foreach (var specificflight in airline.Flights.Values)
             {
-
                 if (specificflight.FlightNumber == flightnumber)
                 {
                     notfound2 = false;
+
                     Console.WriteLine("1. Modify Flight");
                     Console.WriteLine("2. Delete Flight");
+                    Console.WriteLine("3. Modify Boarding Gate");
                     Console.WriteLine("Please select your option: ");
                     try
                     {
@@ -164,82 +165,113 @@ void ModifyFlight(List<Flight> flightList)
                         switch (option)
                         {
                             case 1:
-                                Console.WriteLine("1. Modify Basic Information\r\n2. Modify Status\r\n3. Modify Special Request Code\r\n4. Modify Boarding Gate ");
-                                Console.WriteLine("Please select your option: ");
-                                int option2 = Convert.ToInt32(Console.ReadLine());
-                                switch (option2)
-                                {
-                                    case 1:
-                                        
-                                        Console.WriteLine("Enter new origin: ");
-                                        string neworigin = Console.ReadLine();
-                                        Console.WriteLine("Enter new destination: ");
-                                        string newdestination = Console.ReadLine();
-                                        Console.WriteLine("Enter new expected time: ");
-                                        DateTime newexpectedtime = Convert.ToDateTime(Console.ReadLine());
-                                        specificflight.Origin = neworigin;
-                                        specificflight.Destination = newdestination;
-                                        specificflight.ExpectedTime = newexpectedtime;
-                                        Console.WriteLine("Flight details modified.");
+                                // Modify other flight details
+                                Console.WriteLine("Enter new origin: ");
+                                string neworigin = Console.ReadLine();
+                                Console.WriteLine("Enter new destination: ");
+                                string newdestination = Console.ReadLine();
 
-                                        break;
-                                    case 2:
-                                        Console.WriteLine("Enter new status: ");
-                                        string newstatus = Console.ReadLine();
-                                        specificflight.Status = newstatus;
-                                        break;
-                                    case 3:
-                                        Console.WriteLine("Enter new special request code: ");
-                                        string newspecialrequestcode = Console.ReadLine();
-                                        specificflight.Code = newspecialrequestcode;
-                                        break;
-                                    case 4:
-                                        Console.WriteLine("Enter new boarding gate: ");
-                                        string newboardinggate = Console.ReadLine();
-                                        specificflight.Gate = newboardinggate;
-                                        break;
-                                    default:
-                                        Console.WriteLine("Invalid integer. Please try again.");
-                                        break;
-                                }
-                                break;
-                            case 2:
-                                if (airline.Flights.ContainsKey(flightnumber))
+                                // Validate DateTime input for new expected time
+                                DateTime newexpectedtime;
+                                while (true)
                                 {
-                                    Console.WriteLine("Confirm deletion of flight? (Y/N)");
-                                    string confirm = Console.ReadLine().ToUpper();
-                                    if (confirm == "Y")
+                                    Console.WriteLine("Enter new expected time (format: MM/dd/yyyy HH:mm): ");
+                                    if (DateTime.TryParse(Console.ReadLine(), out newexpectedtime))
+                                    {
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid date format. Please try again.");
+                                    }
+                                }
+
+                                specificflight.Origin = neworigin;
+                                specificflight.Destination = newdestination;
+                                specificflight.ExpectedTime = newexpectedtime;
+                                Console.WriteLine("Flight details modified.");
+                                Console.WriteLine("FlightNumber\tOrigin\t\tDestination\t\tExpectedTime");
+                                Console.WriteLine(specificflight.ToString());
+                                break;
+
+                            case 2:
+                                // Confirm flight deletion
+                                Console.WriteLine("Confirm deletion of flight? (Y/N)");
+                                string confirmDelete = Console.ReadLine().ToUpper();
+                                if (confirmDelete == "Y")
+                                {
+                                    if (airline.Flights.ContainsKey(flightnumber))
                                     {
                                         airline.Flights.Remove(flightnumber);
                                         Console.WriteLine("Flight Removed.");
                                     }
+                                    else
+                                    {
+                                        Console.WriteLine("Flight number not found.");
+                                    }
                                 }
                                 break;
+
+                            case 3:
+                                // Modify Boarding Gate details
+                                BoardingGate flightBoardingGate = null;
+                                foreach (var gate in boardingGateList)
+                                {
+                                    if (gate.Flight != null && gate.Flight.FlightNumber == flightnumber)
+                                    {
+                                        flightBoardingGate = gate;
+                                        break;
+                                    }
+                                }
+
+                                if (flightBoardingGate != null)
+                                {
+                                    Console.WriteLine("Current Boarding Gate details:");
+                                    Console.WriteLine(flightBoardingGate.ToString());
+
+                                    // Modify Boarding Gate details
+                                    Console.WriteLine("Enter new Gate Name: ");
+                                    string gateName = Console.ReadLine();
+
+                                    // Validate boolean input for gate support types (CFFT, DDJB, LWTT)
+                                    bool supportsCFFT = GetBooleanInput("Supports CFFT (true/false): ");
+                                    bool supportsDDJB = GetBooleanInput("Supports DDJB (true/false): ");
+                                    bool supportsLWTT = GetBooleanInput("Supports LWTT (true/false): ");
+
+                                    // Update the Boarding Gate details
+                                    flightBoardingGate.GateName = gateName;
+                                    flightBoardingGate.SupportsCFFT = supportsCFFT;
+                                    flightBoardingGate.SupportsDDJB = supportsDDJB;
+                                    flightBoardingGate.SupportsLWTT = supportsLWTT;
+
+                                    Console.WriteLine("Boarding Gate details updated.");
+                                    Console.WriteLine(flightBoardingGate.ToString());
+                                }
+                                else
+                                {
+                                    Console.WriteLine("No Boarding Gate assigned to this flight.");
+                                }
+                                break;
+
                             default:
-                                Console.WriteLine("Invalid integer. Please try again.");
+                                Console.WriteLine("Invalid option. Please try again.");
                                 break;
                         }
                     }
                     catch (FormatException)
                     {
                         Console.WriteLine("Invalid input. Please try again.");
-                       
                     }
                     catch (OverflowException)
                     {
                         Console.WriteLine("Invalid input. Please try again.");
-                       
                     }
-
-
                 }
             }
             if (notfound2)
             {
                 Console.WriteLine("Flight number not found.");
             }
-
-
         }
     }
     if (notfound)
@@ -248,9 +280,31 @@ void ModifyFlight(List<Flight> flightList)
     }
 }
 
+// Helper method for validating boolean inputs for boarding gate supports
+bool GetBooleanInput(string prompt)
+{
+    bool result;
+    while (true)
+    {
+        Console.WriteLine(prompt);
+        string input = Console.ReadLine().ToLower();
+        if (input == "true" || input == "false")
+        {
+            result = Convert.ToBoolean(input);
+            return result;
+        }
+        else
+        {
+            Console.WriteLine("Invalid input. Please enter 'true' or 'false'.");
+        }
+    }
+}
+
+
+
 
 CreateAirlineObject(AirlineList);
-CreateBoardingGateObject(BoardingGateList);
+CreateBoardingGateObject(BoardingGateList);// This won't work unless CreateFlightObject is called first (delete when you have the method)
 bool trueornot = true;
 while (trueornot == true)
 {
@@ -275,7 +329,7 @@ while (trueornot == true)
                 ListAllFlights(AirlineList);
                 break;
             case 6:
-                ModifyFlight(FlightList);
+                ModifyFlight(BoardingGateList);
                 break;
             case 7:
                 break;
