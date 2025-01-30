@@ -6,18 +6,30 @@
 
 using PRG2REAL_assignment;
 
-List<Flight> FlightList = new List<Flight>();
-List<BoardingGate> BoardingGateList = new List<BoardingGate>();
+// Create Generic Collections: 
+Dictionary<string,Airline> airlines = new Dictionary<string, Airline>();
+Dictionary<string, Flight> flights = new Dictionary<string, Flight>();
+Dictionary<string, BoardingGate> boardingGates = new Dictionary<string, BoardingGate>();
 Dictionary<string, BoardingGate> BoardingGateLookup = new Dictionary<string, BoardingGate>(); //For basic feature 7
-List<Airline> AirlineList = new List<Airline>();
 Queue<Flight> UnassignedFlights = new Queue<Flight>(); // For advanced feature (a)
+
 void DisplayMenu()
 {
-    Console.WriteLine("=============================================\r\nWelcome to Changi Airport Terminal 5\r\n=============================================\r\n1. List All Flights\r\n2. List Boarding Gates\r\n3. Assign a Boarding Gate to a Flight\r\n4. Create Flight\r\n5. Display Airline Flights\r\n6. Modify Flight Details\r\n7. Display Flight Schedule\r\n0. Exit");
+    Console.WriteLine("=============================================");
+    Console.WriteLine("Welcome to Changi Airport Terminal 5");
+    Console.WriteLine("=============================================");
+    Console.WriteLine("1. List All Flights");
+    Console.WriteLine("2. List Boarding Gates");
+    Console.WriteLine("3. Assign a Boarding Gate to a Flight");
+    Console.WriteLine("4. Create Flight");
+    Console.WriteLine("5. Display Airline Flights");
+    Console.WriteLine("6. Modify Flight Details");
+    Console.WriteLine("7. Display Flight Schedule");
+    Console.WriteLine("0. Exit");
 }
 
-// Method to create Airline objects
-void CreateAirlineObject(List<Airline> airlineList)
+// Feature 1  Load Files (airlines and boarding gates)
+void CreateAirlineObject(Dictionary<string, Airline> airlines)
 {
     using (StreamReader sr = new StreamReader("airlines.csv"))
     {
@@ -27,17 +39,18 @@ void CreateAirlineObject(List<Airline> airlineList)
         while ((line = sr.ReadLine()) != null)
         {
             string[] parts = line.Split(',');
-            string airlinename = parts[0];
-            string airlinecode = parts[1];
-
-
-            airlineList.Add(new Airline(airlinename, airlinecode));
+            string airlineName = parts[0];
+            string airlineCode = parts[1];
+            // Create Airline object
+            Airline airline = new Airline(airlineName, airlineCode);
+            // Add Airline object to dictionary
+            airlines.Add(airlineCode, airline);
         }
     }
 }
 
-// Method to create Boarding Gate objects
-void CreateBoardingGateObject(List<BoardingGate> boardingGateList)
+// Method to create Boarding Gate objects and add to dictionary
+void CreateBoardingGateObject(Dictionary<string, BoardingGate> BoardingGates)
 {
     using (StreamReader sr = new StreamReader("boardinggates.csv"))
     {
@@ -47,22 +60,16 @@ void CreateBoardingGateObject(List<BoardingGate> boardingGateList)
         while ((line = sr.ReadLine()) != null)
         {
             string[] parts = line.Split(',');
-            string boardinggate = parts[0];
-            bool ddjb = Convert.ToBoolean(parts[1]);
-            bool cfft = Convert.ToBoolean(parts[2]);
-            bool lwtt = Convert.ToBoolean(parts[3]);
+            string bgName = parts[0];
+            bool supportDDJB = Convert.ToBoolean(parts[1]);
+            bool supportCFFT = Convert.ToBoolean(parts[2]);
+            bool supportLWTT = Convert.ToBoolean(parts[3]);
 
-            // Assuming `FlightList` is already populated by CreateFlightObject
-            foreach (var flight in FlightList)
-            {
-                if ((flight is DDJBFlight && ddjb) ||
-                    (flight is CFFTFlight && cfft) ||
-                    (flight is LWTTFlight && lwtt) ||
-                    (flight is NORMFlight))
-                {
-                    boardingGateList.Add(new BoardingGate(boardinggate, ddjb, cfft, lwtt, flight));
-                }
-            }
+            // Create BoardingGate object
+            BoardingGate boardingGate = new BoardingGate(bgName, supportCFFT, supportDDJB, supportLWTT, null);
+
+            // Add BoardingGate object to Dictionary
+            boardingGates.Add(bgName, boardingGate);
         }
     }
 }
@@ -77,28 +84,33 @@ void ListAllBoardingGates(List<BoardingGate> boardingGateList)
 }
 
 // Display all flights through airline list
-void ListAllFlights(List<Airline> airlineList, Dictionary<string, BoardingGate> boardingGateLookup)
+void ListAllFlights(Dictionary<string, Airline> a, Dictionary<string, BoardingGate> boardingGateLookup)
 {
-    Console.WriteLine("=============================================\r\nList of Airlines for Changi Airport Terminal 5\r\n=============================================");
+    Console.WriteLine("=============================================");
+    Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
+    Console.WriteLine("=============================================");
 
     // List all airlines available
-    foreach (var airline in airlineList)
+    foreach (var airline in a)
     {
         Console.WriteLine(airline.ToString());
     }
 
     // Prompt the user to enter the 2-letter airline code
-    Console.WriteLine("\nEnter Airline code (e.g., SQ, MH): ");
+    Console.Write("Enter Airline code (e.g., SQ, MH): ");
     string code = Console.ReadLine();
     bool airlineFound = false; // Flag for checking if the airline code is found
 
     // Retrieve the Airline object by code
-    foreach (var airline in airlineList)
+    foreach (var airline in airlines)
     {
         if (airline.Code.Equals(code, StringComparison.OrdinalIgnoreCase)) // Case-insensitive comparison
         {
             airlineFound = true;
             Console.WriteLine($"=============================================\r\nList of Flights for {airline.Name}\r\n=============================================");
+            Console.WriteLine($"List of Flights for {airline.");
+            Console.WriteLine($"");
+
             Console.WriteLine("FlightNumber\tOrigin\t\tDestination");
 
             // Display flight list for the selected airline
@@ -152,11 +164,13 @@ void ListAllFlights(List<Airline> airlineList, Dictionary<string, BoardingGate> 
     }
 }
 
+// Create airline dictionary 
+Dictionary<string, Airline> airlines = new Dictionary<string, Airline>();
 // Modify flight details
 void ModifyFlight(List<Flight> flightList)
 {
     Console.WriteLine("=============================================\r\nList of Airlines for Changi Airport Terminal 5\r\n=============================================");
-    foreach (var airline in AirlineList)
+    foreach (var airline in airlines)
     {
         Console.WriteLine(airline.ToString());
     }
@@ -363,6 +377,101 @@ bool SupportsSpecialCode(BoardingGate bg, string specialRequestCode)
            (specialRequestCode == "CFFT" && bg.SupportsCFFT) ||
            (specialRequestCode == "LWTT" && bg.SupportsLWTT);
 }
+
+// Feature 2 Load Files (flights)
+
+// Method to load flights data, create flight objects and add to dictionary
+void LoadFlights(Dictionary<string, Flight> fDict)
+{
+    string[] csvLines = File.ReadAllLines("flights.csv");
+
+    // Display heading 
+    string[] heading = csvLines[0].Split(',');
+    Console.WriteLine("{0,-17} {1,-21} {2,-20} {3,-30} {4,-25}", heading[0], heading[1], heading[2], heading[3], heading[4]);
+
+    // Display the rest of flight details
+    for (int i = 1; i < csvLines.Length; i++)
+    {
+        string[] flightDetails = csvLines[i].Split(',');
+        Console.WriteLine("{0,-17} {1,-21} {2,-20} {3,-30} {4,-25}", flightDetails[0], flightDetails[1], flightDetails[2], flightDetails[3], flightDetails[4]);
+    }
+
+    // Create flight objects based on data and add to dictionary
+    for (int i = 1; i < csvLines.Length; i++)
+    {
+        string[] flightDetails = csvLines[i].Split(',');
+        string flightNumber = flightDetails[0];
+        string origin = flightDetails[1];
+        string destination = flightDetails[2];
+        DateTime expectedTime = DateTime.Parse(flightDetails[3]);
+        string status = flightDetails[4];
+
+        Flight flight;
+
+        // Create specific flight object based on status
+        if (status == "CFFT")
+        {
+            flight = new CFFTFlight(flightNumber, origin, destination, expectedTime, status);
+        }
+        else if (status == "DDJB")
+        {
+            flight = new DDJBFlight(flightNumber, origin, destination, expectedTime, status);
+        }
+        else if (status == "LWTTFlight")
+        {
+            flight = new LWTTFlight(flightNumber, origin, destination, expectedTime, status);
+        }
+        else
+        {
+            flight = new NORMFlight(flightNumber, origin, destination, expectedTime, status);
+        }
+
+        // Add the flight to the dictionary with flightNumber as the key
+        fDict[flightNumber] = flight;
+    }
+}
+
+// Feature 3 List all flights with their basic information
+void DisplayFlights()
+{
+    try
+    {
+        string[] csvLines = File.ReadAllLines("flights.csv");
+        string[] csvLines2 = File.ReadAllLines("airlines.csv");
+        // Display heading 
+        string[] heading = csvLines[0].Split(',');
+        Console.WriteLine("{0,-17} {1,-21} {2,-20} {3,-30} {4,-25}", heading[0], "Airline Name", heading[2], heading[3], heading[4]);
+
+        // Display the rest of flight details
+        foreach (Flight flight in flights.Values)
+        {
+            string airlineName = "";
+            if (airlines.ContainsKey(flight.FlightNumber.Substring(0, 2)))
+            {
+                airlineName = airlines[flight.FlightNumber.Substring(0, 2)].Name;
+            }
+            else
+            {
+                airlineName = "Unknown";
+            }
+
+            Console.WriteLine("{0,-17} {1,-21} {2,-20} {3,-30} {4,-25}", flight.FlightNumber, airlineName, flight.Origin, flight.Destination, flight.ExpectedTime);
+        }
+    }
+    catch (IndexOutOfRangeException ex)
+    {
+        Console.WriteLine("An error occurred: Index was outside the bounds of the array.");
+        Console.WriteLine(ex.Message);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("An unexpected error occurred.");
+        Console.WriteLine(ex.Message);
+    }
+}
+
+
+
 
 
 
