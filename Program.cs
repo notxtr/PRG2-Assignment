@@ -108,7 +108,7 @@ void ListAllFlights(Dictionary<string, Airline> a, Dictionary<string, BoardingGa
         {
             airlineFound = true;
             Console.WriteLine($"=============================================\r\nList of Flights for {airline.Name}\r\n=============================================");
-            Console.WriteLine($"List of Flights for {airline.");
+            Console.WriteLine($"List of Flights for {airline}.");
             Console.WriteLine($"");
 
             Console.WriteLine("FlightNumber\tOrigin\t\tDestination");
@@ -477,8 +477,8 @@ void DisplayFlights()
 
 
 
-CreateAirlineObject(AirlineList);
-CreateBoardingGateObject(BoardingGateList);// This won't work unless CreateFlightObject is called first (delete this comment when you have the method)
+CreateAirlineObject(airlines);
+CreateBoardingGateObject(boardingGates);// This won't work unless CreateFlightObject is called first (delete this comment when you have the method)
 ProcessUnassignedFlights(UnassignedFlights);
 bool trueornot = true;
 while (trueornot == true)
@@ -494,14 +494,14 @@ while (trueornot == true)
             case 1:
                 break;
             case 2:
-                ListAllBoardingGates(BoardingGateList);
+                ListAllBoardingGates(boardingGates);
                 break;
             case 3:
                 break;
             case 4:
                 break;
             case 5:
-                ListAllFlights(AirlineList, BoardingGateLookup);
+                ListAllFlights(airlines, BoardingGateLookup);
                 break;
             case 6:
                 ModifyFlight(FlightList);
