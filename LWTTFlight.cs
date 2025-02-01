@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PRG2REAL_assignment;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace PRG2REAL_assignment
         public LWTTFlight() { }
 
         // Parameterized Constructor
-        public LWTTFlight(string fn, string o, string d, DateTime et, string s) : base(fn, o, d, et, s) { }
+        public LWTTFlight(string fn, string o, string d, DateTime et, string s, Airline airline) : base(fn, o, d, et, s, airline) { }
 
         // Override CalculateFees method
         public override double CalculateFees()

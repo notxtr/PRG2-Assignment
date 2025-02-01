@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PRG2REAL_assignment;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace PRG2REAL_assignment
         public NORMFlight() { }
 
         // Parameterized Constructor
-        public NORMFlight(string fn, string o, string d, DateTime et, string s) : base(fn, o, d, et, s) { }
+        public NORMFlight(string fn, string o, string d, DateTime et, string s, Airline airline) : base(fn, o, d, et, s, airline) { }
 
 
         // Override CalculateFees method
@@ -37,7 +38,7 @@ namespace PRG2REAL_assignment
         // ToString method
         public override string ToString()
         {
-            return base.ToString()+$"\t\t{ExpectedTime}\t\t{Status}";
+            return base.ToString() + $"\t\t{ExpectedTime}\t\t{Status}";
         }
     }
 }

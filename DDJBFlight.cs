@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PRG2REAL_assignment;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace PRG2REAL_assignment
         public DDJBFlight() { }
 
         // Parameterized Constructor
-        public DDJBFlight(string fn, string o, string d, DateTime et, string s) : base(fn, o, d, et, s) { }
+        public DDJBFlight(string fn, string o, string d, DateTime et, string s, Airline airline) : base(fn, o, d, et, s, airline) { }
 
         // Override CalculateFees method
         public override double CalculateFees()
