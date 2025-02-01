@@ -13,22 +13,8 @@ Dictionary<string, BoardingGate> boardingGates = new Dictionary<string, Boarding
 Dictionary<string, BoardingGate> BoardingGateLookup = new Dictionary<string, BoardingGate>(); //For basic feature 7
 Queue<Flight> UnassignedFlights = new Queue<Flight>(); // For advanced feature (a)
 
-void DisplayMenu()
-{
-    Console.WriteLine("=============================================");
-    Console.WriteLine("Welcome to Changi Airport Terminal 5");
-    Console.WriteLine("=============================================");
-    Console.WriteLine("1. List All Flights");
-    Console.WriteLine("2. List Boarding Gates");
-    Console.WriteLine("3. Assign a Boarding Gate to a Flight");
-    Console.WriteLine("4. Create Flight");
-    Console.WriteLine("5. Display Airline Flights");
-    Console.WriteLine("6. Modify Flight Details");
-    Console.WriteLine("7. Display Flight Schedule");
-    Console.WriteLine("0. Exit");
-}
 
-// Feature 1 
+// Feature 1 Load files (airlines and boarding gates)
 void InitAirlines()
 {
     using (StreamReader sr = new StreamReader("airlines.csv"))
@@ -72,11 +58,10 @@ void InitBoardingGates()
         }
     }
 }
-InitAirlines();
-InitBoardingGates();
+
 // Feature 2 Load Files (flights)
 // Method to load flights data, create flight objects and add to dictionary
-void LoadFlights()
+void InitFlights()
 {
     string[] csvLines = File.ReadAllLines("flights.csv");
 
@@ -123,7 +108,7 @@ void LoadFlights()
 
     }
 }
-LoadFlights();
+
 // Feature 3 List all flights with their basic information
 void DisplayFlights()
 {
@@ -770,11 +755,11 @@ void ProcessUnassignedFlights(Queue<Flight> unassignedFlights)
 
         if (!string.IsNullOrEmpty(specialRequestCode))
         {
-            assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null && SupportsSpecialCode(bg, specialRequestCode));
+            //assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null && SupportsSpecialCode(bg, specialRequestCode));
         }
         else
         {
-            assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null);
+            //assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null);
         }
 
         if (assignedGate != null)
@@ -792,7 +777,7 @@ void ProcessUnassignedFlights(Queue<Flight> unassignedFlights)
 
     Console.WriteLine($"Total flights processed and assigned: {assignedCount}");
     Console.WriteLine($"Assignment success rate: {(unassignedFlightsCount > 0 ? (assignedCount * 100.0 / unassignedFlightsCount) : 0):F2}%");
-}
+} 
 
 // Method to get special request code dynamically
 string GetSpecialRequestCode(Flight flight)
@@ -812,19 +797,27 @@ bool SupportsSpecialCode(BoardingGate bg, string specialRequestCode)
 }
 
 
+// Initialize Airlines, Boarding Gates and Flights
+InitAirlines();
+InitBoardingGates();
+InitFlights();
 
 
-
-
-
-CreateAirlineObject(airlines);
-CreateBoardingGateObject(boardingGates);// This won't work unless CreateFlightObject is called first (delete this comment when you have the method)
 ProcessUnassignedFlights(UnassignedFlights);
 bool trueornot = true;
 while (trueornot == true)
 {
-    DisplayMenu();
-
+    Console.WriteLine("=============================================");
+    Console.WriteLine("Welcome to Changi Airport Terminal 5");
+    Console.WriteLine("=============================================");
+    Console.WriteLine("1. List All Flights");
+    Console.WriteLine("2. List Boarding Gates");
+    Console.WriteLine("3. Assign a Boarding Gate to a Flight");
+    Console.WriteLine("4. Create Flight");
+    Console.WriteLine("5. Display Airline Flights");
+    Console.WriteLine("6. Modify Flight Details");
+    Console.WriteLine("7. Display Flight Schedule");
+    Console.WriteLine("0. Exit");
     Console.WriteLine("Please select an option: ");
     try
     {
@@ -832,21 +825,25 @@ while (trueornot == true)
         switch (option)
         {
             case 1:
+                DisplayFlights();
                 break;
             case 2:
                 ListAllBoardingGates();
                 break;
             case 3:
+                AssignBoardingGate();
                 break;
             case 4:
+                CreateNewFlight();
                 break;
             case 5:
-                ListAllFlights();
+                DisplayAirlineFlights();
                 break;
             case 6:
-                ModifyFlight();
+                ModifyFlightDetails();
                 break;
             case 7:
+                DisplayScheduledFlights();
                 break;
             case 0:
                 trueornot = false;
