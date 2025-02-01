@@ -74,7 +74,7 @@ void CreateBoardingGateObject(Dictionary<string, BoardingGate> BoardingGates)
     }
 }
 
-// Display all boarding gates
+// Feature 4 (Display all boarding gates)
 void ListAllBoardingGates(List<BoardingGate> boardingGateList)
 {
     foreach (var boardingGate in boardingGateList)
@@ -83,7 +83,7 @@ void ListAllBoardingGates(List<BoardingGate> boardingGateList)
     }
 }
 
-// Display all flights through airline list
+// Feature 7 (Display all flights through airline list)
 void ListAllFlights(Dictionary<string, Airline> a, Dictionary<string, BoardingGate> boardingGateLookup)
 {
     Console.WriteLine("=============================================");
@@ -104,17 +104,19 @@ void ListAllFlights(Dictionary<string, Airline> a, Dictionary<string, BoardingGa
     // Retrieve the Airline object by code
     foreach (var airline in airlines)
     {
-        if (airline.Code.Equals(code, StringComparison.OrdinalIgnoreCase)) // Case-insensitive comparison
+        if (airline.Value.Code.Equals(code, StringComparison.OrdinalIgnoreCase)) // Case-insensitive comparison
         {
             airlineFound = true;
-            Console.WriteLine($"=============================================\r\nList of Flights for {airline.Name}\r\n=============================================");
+            Console.WriteLine($"=============================================");
+            Console.WriteLine($"List of Flights for {airline.Value.Name}");
+            Console.WriteLine($"=============================================");
             Console.WriteLine($"List of Flights for {airline}.");
-            Console.WriteLine($"");
+            Console.WriteLine("");
 
             Console.WriteLine("FlightNumber\tOrigin\t\tDestination");
 
             // Display flight list for the selected airline
-            foreach (var flight in airline.Flights.Values)
+            foreach (var flight in airline.Value.Flights.Values)
             {
                 Console.WriteLine($"{flight.FlightNumber}\t\t{flight.Origin}\t\t{flight.Destination}");
             }
@@ -125,15 +127,17 @@ void ListAllFlights(Dictionary<string, Airline> a, Dictionary<string, BoardingGa
             bool flightFound = false; // Flag for checking if the flight number is found
 
             // Retrieve the specific flight from the dictionary
-            if (airline.Flights.ContainsKey(flightNumber))
+            if (airline.Value.Flights.ContainsKey(flightNumber))
             {
-                var flight = airline.Flights[flightNumber];
+                var flight = airline.Value.Flights[flightNumber];
                 flightFound = true;
-                Console.WriteLine("=============================================\r\nFlight Details\r\n=============================================");
+                Console.WriteLine("=============================================");
+                Console.WriteLine("Flight Details");
+                Console.WriteLine("=============================================");
                 Console.WriteLine("FlightNumber\tAirline\t\tOrigin\t\tDestination\t\tExpectedTime\t\tSpecial Request\tBoarding Gate");
 
                 // Display basic flight details
-                Console.WriteLine($"{flight.FlightNumber}\t{airline.Name}\t{flight.Origin}\t{flight.Destination}\t{flight.ExpectedTime}\t\t\t{(boardingGateLookup.ContainsKey(flight.FlightNumber) ? boardingGateLookup[flight.FlightNumber].GateName : "None")}");
+                Console.WriteLine($"{flight.FlightNumber}\t{airline.Value.Name}\t{flight.Origin}\t{flight.Destination}\t{flight.ExpectedTime}\t\t\t{(boardingGateLookup.ContainsKey(flight.FlightNumber) ? boardingGateLookup[flight.FlightNumber].GateName : "None")}");
 
                 // If BoardingGate exists, show its details
                 if (boardingGateLookup.ContainsKey(flight.FlightNumber))
@@ -164,12 +168,13 @@ void ListAllFlights(Dictionary<string, Airline> a, Dictionary<string, BoardingGa
     }
 }
 
-// Create airline dictionary 
-Dictionary<string, Airline> airlines = new Dictionary<string, Airline>();
-// Modify flight details
+
+// Feature 8 (Modify flight details)
 void ModifyFlight(List<Flight> flightList)
 {
-    Console.WriteLine("=============================================\r\nList of Airlines for Changi Airport Terminal 5\r\n=============================================");
+    Console.WriteLine("=============================================");
+    Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
+    Console.WriteLine("=============================================");
     foreach (var airline in airlines)
     {
         Console.WriteLine(airline.ToString());
@@ -177,14 +182,16 @@ void ModifyFlight(List<Flight> flightList)
     Console.WriteLine("\nEnter Airline code: ");
     string code = Console.ReadLine();
     bool notfound = true; // Boolean for checking if airline code is found
-    foreach (var airline in AirlineList)
+    foreach (var airline in airlines)
     {
-        if (airline.Code == code)
+        if (airline.Value.Code == code)
         {
             notfound = false;
-            Console.WriteLine($"=============================================\r\nList of Flights for {airline.Name}\r\n=============================================");
+            Console.WriteLine($"=============================================");
+            Console.WriteLine($"List of Flights for {airline.Value.Name}");
+            Console.WriteLine($"=============================================");
             Console.WriteLine("FlightNumber\tOrigin\t\tDestination\t\tExpectedTime");
-            foreach (var flight in airline.Flights.Values)
+            foreach (var flight in airline.Value.Flights.Values)
             {
                 Console.WriteLine(flight.ToString());
             }
@@ -192,7 +199,7 @@ void ModifyFlight(List<Flight> flightList)
             Console.WriteLine("Enter a specific flight number to modify or delete: ");
             string flightnumber = Console.ReadLine();
             bool notfound2 = true; // Boolean for checking if flight number is found
-            foreach (var specificflight in airline.Flights.Values)
+            foreach (var specificflight in airline.Value.Flights.Values)
             {
                 if (specificflight.FlightNumber == flightnumber)
                 {
@@ -245,9 +252,9 @@ void ModifyFlight(List<Flight> flightList)
                                 string confirmDelete = Console.ReadLine().ToUpper();
                                 if (confirmDelete == "Y")
                                 {
-                                    if (airline.Flights.ContainsKey(flightnumber))
+                                    if (airline.Value.Flights.ContainsKey(flightnumber))
                                     {
-                                        airline.Flights.Remove(flightnumber);
+                                        airline.Value.Flights.Remove(flightnumber);
                                         Console.WriteLine("Flight Removed.");
                                         Console.WriteLine(specificflight.ToString());
                                     }
@@ -309,9 +316,9 @@ bool GetBooleanInput(string prompt)
 void ProcessUnassignedFlights(Queue<Flight> unassignedFlights)
 {
     // Add unassigned flights to queue
-    foreach (var airline in AirlineList)
+    foreach (var airline in airlines)
     {
-        foreach (var flight in airline.Flights.Values)
+        foreach (var flight in airline.Value.Flights.Values)
         {
             if (!BoardingGateLookup.ContainsKey(flight.FlightNumber))
             {
@@ -321,7 +328,7 @@ void ProcessUnassignedFlights(Queue<Flight> unassignedFlights)
     }
 
     int unassignedFlightsCount = unassignedFlights.Count;
-    int unassignedGatesCount = BoardingGateList.Count(bg => bg.Flight == null);
+    int unassignedGatesCount = boardingGates.Count(bg => bg.Value.Flight == null);
 
     Console.WriteLine($"Total unassigned flights: {unassignedFlightsCount}");
     Console.WriteLine($"Total unassigned boarding gates: {unassignedGatesCount}");
@@ -337,11 +344,11 @@ void ProcessUnassignedFlights(Queue<Flight> unassignedFlights)
 
         if (!string.IsNullOrEmpty(specialRequestCode))
         {
-            assignedGate = BoardingGateList.FirstOrDefault(bg => bg.Flight == null && SupportsSpecialCode(bg, specialRequestCode));
+            assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null && SupportsSpecialCode(bg, specialRequestCode));
         }
         else
         {
-            assignedGate = BoardingGateList.FirstOrDefault(bg => bg.Flight == null);
+            assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null);
         }
 
         if (assignedGate != null)
@@ -504,7 +511,7 @@ while (trueornot == true)
                 ListAllFlights(airlines, BoardingGateLookup);
                 break;
             case 6:
-                ModifyFlight(FlightList);
+                ModifyFlight(flights);
                 break;
             case 7:
                 break;
