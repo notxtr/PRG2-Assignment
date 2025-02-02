@@ -755,11 +755,11 @@ void ProcessUnassignedFlights(Queue<Flight> unassignedFlights)
 
         if (!string.IsNullOrEmpty(specialRequestCode))
         {
-            //assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null && SupportsSpecialCode(bg, specialRequestCode));
+            assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null && SupportsSpecialCode(bg, specialRequestCode));
         }
         else
         {
-            //assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null);
+            assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null);
         }
 
         if (assignedGate != null)
@@ -796,6 +796,64 @@ bool SupportsSpecialCode(BoardingGate bg, string specialRequestCode)
            (specialRequestCode == "LWTT" && bg.SupportsLWTT);
 }
 
+// Advanced Feature (b) Display total fee per airline for the day 
+void DisplayTotalFeesPerAirline()
+{
+    Console.WriteLine("=============================================");
+    Console.WriteLine("Total Fees per Airline for Changi Airport Terminal 5");
+    Console.WriteLine("=============================================");
+
+    // Check that are flights have been assigned to boarding gates
+    if (boardingGates.Values.Any(bg => bg.Flight == null))
+    {
+        Console.WriteLine("Not all flights have been assigned to boarding gates.");
+        Console.WriteLine("Ensure all flights have thier boarding gate assigned before running this feature again.");
+        return;
+    }
+
+    double subtotalFees = 0;
+    double finalTotalFees = 0;
+    double totalDiscount = 0;
+
+    // Display header 
+    Console.WriteLine("{0,-20} {1,-20} {2,-20} {3,-20}", "Airline Name", "Subtotal", "Subtotal of Discounts", "Final Total");
+    // Iterate through each airline
+    foreach (var airline in airlines.Values)
+    {
+        double subtotal = 0;
+
+        // Iterate through each flight in the airline
+        foreach (var flight in airline.Flights.Values)
+        {
+           subtotal += flight.CalculateFees(); // Calculate subtotal for each flight and add them up
+        }
+
+
+        // Final fees after discounts
+        double finalFees = airline.CalculateFees();
+
+        // Calculate discount amount 
+        double subtotalDiscount = subtotal - finalFees;
+
+        // Display airline name, subtotal, subtotal of discounts and final total
+        Console.WriteLine("{0,-20} {1,-20} {2,-20} {3,-20}", airline.Name, subtotal, subtotalDiscount, finalFees);
+        Console.WriteLine("=============================================");
+
+        // Add to total fees and total discount
+        subtotalFees += subtotal;
+        totalDiscount += subtotalDiscount;
+        finalTotalFees += finalFees;
+    }
+
+    // Calculate discount percentage
+    double discountPercentage = (totalDiscount / subtotalFees) * 100;
+
+    // Display total fees, total discount and discount percentage
+    Console.WriteLine($"Subtotal of all Airline Fees: ${subtotalFees}");
+    Console.WriteLine($"Subtotal of all Airline Discounts: ${totalDiscount}");
+    Console.WriteLine($"Final total of all Airline Fees: ${finalTotalFees}");
+    Console.WriteLine($"Discount percentage: {discountPercentage:F2}%");
+}
 
 // Initialize Airlines, Boarding Gates and Flights
 InitAirlines();
@@ -817,6 +875,8 @@ while (trueornot == true)
     Console.WriteLine("5. Display Airline Flights");
     Console.WriteLine("6. Modify Flight Details");
     Console.WriteLine("7. Display Flight Schedule");
+    Console.WriteLine("8. Process all unassigned flights to boarding gates in bulk");
+    Console.WriteLine("9. Display the total fee per airline for the day");
     Console.WriteLine("0. Exit");
     Console.WriteLine("Please select an option: ");
     try
@@ -844,6 +904,12 @@ while (trueornot == true)
                 break;
             case 7:
                 DisplayScheduledFlights();
+                break;
+            case 8:
+                ProcessUnassignedFlights();
+                break;
+            case 9:
+                DisplayTotalFeesPerAirline();
                 break;
             case 0:
                 trueornot = false;
