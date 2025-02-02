@@ -702,27 +702,6 @@ void DisplayScheduledFlights()
     }
 }
 
-
-// Helper method for validating boolean inputs for boarding gate supports
-bool GetBooleanInput(string prompt)
-{
-    bool result;
-    while (true)
-    {
-        Console.WriteLine(prompt);
-        string input = Console.ReadLine().ToLower();
-        if (input == "true" || input == "false")
-        {
-            result = Convert.ToBoolean(input);
-            return result;
-        }
-        else
-        {
-            Console.WriteLine("Invalid input. Please enter 'true' or 'false'.");
-        }
-    }
-}
-
 // Advanced Feature (a) Process all unassigned flights to boarding gates in bulk
 void ProcessUnassignedFlights()
 {
@@ -781,7 +760,7 @@ void ProcessUnassignedFlights()
     Console.WriteLine($"Assignment success rate: {(unassignedFlightsCount > 0 ? (assignedCount * 100.0 / unassignedFlightsCount) : 0):F2}%");
 }
 
-// Method to get special request code dynamically
+// Method to get special request code dynamically (For advanced feature (a))
 string GetSpecialRequestCode(Flight flight)
 {
     if (flight is DDJBFlight) return "DDJB";
@@ -790,7 +769,7 @@ string GetSpecialRequestCode(Flight flight)
     return ""; // No special request for normal flights
 }
 
-// Method to check if a boarding gate supports a special request code
+// Method to check if a boarding gate supports a special request code (For advanced feature (a))
 bool SupportsSpecialCode(BoardingGate bg, string specialRequestCode)
 {
     return (specialRequestCode == "DDJB" && bg.SupportsDDJB) ||
