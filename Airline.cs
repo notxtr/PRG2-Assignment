@@ -62,7 +62,7 @@ namespace PRG2REAL_assignment
             // Find fees for each flight
             foreach (KeyValuePair<string, Flight> f in Flights)
             {
-                totalBill = f.Value.CalculateFees(); // set totalBill as base fee
+                totalBill += f.Value.CalculateFees(); // set totalBill as base fee
             }
 
             // 3% discount for airlines with more than 5 flights
