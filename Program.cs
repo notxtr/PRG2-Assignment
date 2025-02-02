@@ -170,8 +170,7 @@ void ListAllBoardingGates()
             boardingGate.GateName, boardingGate.SupportsDDJB, boardingGate.SupportsCFFT, boardingGate.SupportsLWTT);
     }
 }
-
-// Feature 5 Assign a boarding gate to a flight
+// Feature 5 Assign a Boarding Gate to a Flight
 void AssignBoardingGate()
 {
     Console.WriteLine("=============================================");
@@ -179,66 +178,78 @@ void AssignBoardingGate()
     Console.WriteLine("=============================================");
 
     // Get flight number from user
-    Console.WriteLine("Enter Flight Number: ");
-    string? flightNumber = Console.ReadLine();
+    Console.Write("Enter Flight Number: ");
+    string? flightNumber = Console.ReadLine()?.Trim();
 
-    // Find flight object from dictionary
+    // Validate flight number input
+    if (string.IsNullOrEmpty(flightNumber))
+    {
+        Console.WriteLine("Error: Flight number cannot be empty.");
+        return;
+    }
+
+    // Check if the flight exists
+    if (!flights.ContainsKey(flightNumber))
+    {
+        Console.WriteLine("Error: Flight number does not exist.");
+        return;
+    }
+
     Flight chosenFlight = flights[flightNumber];
 
-    // Check if it has already been assigned a boarding gate
-    bool alreadyAssigned = boardingGates.Values.Any(bg => bg.Flight != null);
-
-    if (alreadyAssigned)
+    // Check if flight already has a boarding gate assigned
+    if (boardingGates.Values.Any(bg => bg.Flight == chosenFlight))
     {
-        Console.WriteLine("This flight has already been assigned a boarding gate.");
+        Console.WriteLine("Error: This flight has already been assigned a boarding gate.");
         return;
     }
 
     // Get boarding gate name from user
-    Console.WriteLine("Enter Boarding Gate Name: ");
-    string? gateName = Console.ReadLine();
+    Console.Write("Enter Boarding Gate Name: ");
+    string? gateName = Console.ReadLine()?.Trim();
+
+    // Validate boarding gate input
+    if (string.IsNullOrEmpty(gateName))
+    {
+        Console.WriteLine("Error: Boarding gate name cannot be empty.");
+        return;
+    }
 
     // Check if boarding gate exists
     if (!boardingGates.ContainsKey(gateName))
     {
-        Console.WriteLine("This boarding gate does not exist.");
+        Console.WriteLine("Error: This boarding gate does not exist.");
         return;
     }
-    // Find boarding gate object from dictionary
+
     BoardingGate chosenGate = boardingGates[gateName];
 
     // Check if boarding gate is already assigned
     if (chosenGate.Flight != null)
     {
-        Console.WriteLine("This boarding gate has already been assigned a flight.");
+        Console.WriteLine("Error: This boarding gate has already been assigned to another flight.");
+        return;
+    }
+
+    // Ensure the boarding gate supports the special request type of the flight
+    if ((chosenFlight is CFFTFlight && !chosenGate.SupportsCFFT) ||
+        (chosenFlight is DDJBFlight && !chosenGate.SupportsDDJB) ||
+        (chosenFlight is LWTTFlight && !chosenGate.SupportsLWTT))
+    {
+        Console.WriteLine($"Error: This boarding gate does not support {chosenFlight.GetType().Name} flights.");
         return;
     }
 
     // Assign flight to boarding gate
     chosenGate.Flight = chosenFlight;
 
-    // Change flight special request code to "" instead of NORM
-    string specialRequestCode;
-
-    // Check if flight is a special request flight
-    if (chosenFlight is CFFTFlight)
-    {
-        specialRequestCode = "CFFT";
-    }
-    else if (chosenFlight is DDJBFlight)
-    {
-        specialRequestCode = "DDJB";
-    }
-    else if (chosenFlight is LWTTFlight)
-    {
-        specialRequestCode = "LWTT";
-    }
-    else
-    {
-        specialRequestCode = "None";
-    }
+    // Determine special request code
+    string specialRequestCode = chosenFlight is CFFTFlight ? "CFFT" :
+                                chosenFlight is DDJBFlight ? "DDJB" :
+                                chosenFlight is LWTTFlight ? "LWTT" : "None";
 
     // Display flight information
+    Console.WriteLine("=============================================");
     Console.WriteLine($"Flight Number: {chosenFlight.FlightNumber}");
     Console.WriteLine($"Origin: {chosenFlight.Origin}");
     Console.WriteLine($"Destination: {chosenFlight.Destination}");
@@ -248,28 +259,46 @@ void AssignBoardingGate()
     Console.WriteLine($"Supports DDJB: {chosenGate.SupportsDDJB}");
     Console.WriteLine($"Supports CFFT: {chosenGate.SupportsCFFT}");
     Console.WriteLine($"Supports LWTT: {chosenGate.SupportsLWTT}");
-    Console.WriteLine("Would you like to update the status of the flight? (Y/N)");
+    Console.WriteLine("=============================================");
 
-    // Get user input
-    string? updateStatus = Console.ReadLine();
+    // Ask user to update flight status
+    Console.Write("Would you like to update the status of the flight? (Y/N): ");
+    string? updateStatus = Console.ReadLine()?.Trim().ToUpper();
 
-    // Check if user input is valid
-    if (updateStatus == "Y" || updateStatus == "y")
+    if (updateStatus == "Y")
     {
         Console.WriteLine("1. Delayed");
         Console.WriteLine("2. Boarding");
         Console.WriteLine("3. On Time");
-        Console.WriteLine("Please select the new status of the flight:");
-        string? newStatus = Console.ReadLine();
-        chosenFlight.Status = newStatus;
+        Console.Write("Please select the new status of the flight: ");
+
+        string? newStatus = Console.ReadLine()?.Trim();
+
+        // Validate status selection
+        if (newStatus == "1")
+        {
+            chosenFlight.Status = "Delayed";
+        }
+        else if (newStatus == "2")
+        {
+            chosenFlight.Status = "Boarding";
+        }
+        else if (newStatus == "3")
+        {
+            chosenFlight.Status = "On Time";
+        }
+        else
+        {
+            Console.WriteLine("Invalid option. Flight status remains unchanged.");
+        }
     }
     else
     {
         Console.WriteLine($"Flight status remains {chosenFlight.Status}");
     }
 
-    // Display updated flight information
-    Console.WriteLine($"Flight {chosenFlight.FlightNumber} has been assigned to Boarding Gate {chosenGate.GateName}!");
+    // Display final assignment confirmation
+    Console.WriteLine($"Flight {chosenFlight.FlightNumber} has been successfully assigned to Boarding Gate {chosenGate.GateName}!");
 }
 
 
@@ -699,27 +728,6 @@ void DisplayScheduledFlights()
 
         // Display flight information
         Console.WriteLine($"{flight.FlightNumber,-17} {airlines[flight.FlightNumber.Substring(0, 2)].Name,-21} {flight.Origin,-20} {flight.Destination,-20} {formattedTime,-35} {flight.Status,-12} {boardingGate,-10}");
-    }
-}
-
-
-// Helper method for validating boolean inputs for boarding gate supports
-bool GetBooleanInput(string prompt)
-{
-    bool result;
-    while (true)
-    {
-        Console.WriteLine(prompt);
-        string input = Console.ReadLine().ToLower();
-        if (input == "true" || input == "false")
-        {
-            result = Convert.ToBoolean(input);
-            return result;
-        }
-        else
-        {
-            Console.WriteLine("Invalid input. Please enter 'true' or 'false'.");
-        }
     }
 }
 
