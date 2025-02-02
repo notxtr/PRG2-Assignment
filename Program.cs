@@ -359,6 +359,9 @@ void DisplayAirlineFlights()
 
     Console.Write("Enter Airline Code: ");
     string? airlineCode = Console.ReadLine().ToUpper();
+    Console.WriteLine("=============================================");
+    Console.WriteLine("List of Flights for Singapore Airlines");
+    Console.WriteLine("=============================================");
 
     // Check if airline code exists
     if (airlineCode == "SQ" || airlineCode == "MH" || airlineCode == "JL" || airlineCode == "CX" || airlineCode == "QF" || airlineCode == "TR" || airlineCode == "EK" || airlineCode == "BA")
@@ -838,8 +841,7 @@ void DisplayTotalFeesPerAirline()
         double subtotalDiscount = subtotal - finalFees;
 
         // Display airline name, subtotal, subtotal of discounts and final total
-        Console.WriteLine("{0,-20} {1,-20} {2,-30} {3,-20}", airline.Name, subtotal, subtotalDiscount, finalFees);
-        Console.WriteLine("------------------------------------------------------------------------------------");
+        Console.WriteLine("{0,-20} ${1,-19} ${2,-29} ${3,-20}", airline.Name, subtotal, subtotalDiscount, finalFees);
 
         // Add to total fees and total discount
         subtotalFees += subtotal;
@@ -851,6 +853,7 @@ void DisplayTotalFeesPerAirline()
     double discountPercentage = (totalDiscount / subtotalFees) * 100;
 
     // Display total fees, total discount and discount percentage
+    Console.WriteLine("------------------------------------------------------------------------------------");
     Console.WriteLine($"Subtotal of all Airline Fees: ${subtotalFees}");
     Console.WriteLine($"Subtotal of all Airline Discounts: ${totalDiscount}");
     Console.WriteLine($"Final total of all Airline Fees: ${finalTotalFees}");
@@ -862,6 +865,8 @@ InitAirlines();
 InitBoardingGates();
 InitFlights();
 
+
+// Display Menu Options 
 bool trueornot = true;
 while (trueornot == true)
 {
