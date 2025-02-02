@@ -359,9 +359,6 @@ void DisplayAirlineFlights()
 
     Console.Write("Enter Airline Code: ");
     string? airlineCode = Console.ReadLine().ToUpper();
-    Console.WriteLine("=============================================");
-    Console.WriteLine("List of Flights for Singapore Airlines");
-    Console.WriteLine("=============================================");
 
     // Check if airline code exists
     if (airlineCode == "SQ" || airlineCode == "MH" || airlineCode == "JL" || airlineCode == "CX" || airlineCode == "QF" || airlineCode == "TR" || airlineCode == "EK" || airlineCode == "BA")
