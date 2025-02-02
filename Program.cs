@@ -723,8 +723,8 @@ bool GetBooleanInput(string prompt)
     }
 }
 
-// Process unassigned flights in bulk
-void ProcessUnassignedFlights(Queue<Flight> unassignedFlights)
+// Advanced Feature (a) Process all unassigned flights to boarding gates in bulk
+void ProcessUnassignedFlights()
 {
     // Add unassigned flights to queue
     foreach (var airline in airlines)
@@ -733,12 +733,12 @@ void ProcessUnassignedFlights(Queue<Flight> unassignedFlights)
         {
             if (!BoardingGateLookup.ContainsKey(flight.FlightNumber))
             {
-                unassignedFlights.Enqueue(flight);
+                UnassignedFlights.Enqueue(flight);
             }
         }
     }
 
-    int unassignedFlightsCount = unassignedFlights.Count;
+    int unassignedFlightsCount = UnassignedFlights.Count;
     int unassignedGatesCount = boardingGates.Count(bg => bg.Value.Flight == null);
 
     Console.WriteLine($"Total unassigned flights: {unassignedFlightsCount}");
@@ -746,9 +746,9 @@ void ProcessUnassignedFlights(Queue<Flight> unassignedFlights)
 
     int assignedCount = 0;
 
-    while (unassignedFlights.Count > 0)
+    while (UnassignedFlights.Count > 0)
     {
-        Flight flight = unassignedFlights.Dequeue();
+        Flight flight = UnassignedFlights.Dequeue();
         BoardingGate assignedGate = null;
 
         string specialRequestCode = GetSpecialRequestCode(flight); // Get the request code dynamically
@@ -779,7 +779,7 @@ void ProcessUnassignedFlights(Queue<Flight> unassignedFlights)
 
     Console.WriteLine($"Total flights processed and assigned: {assignedCount}");
     Console.WriteLine($"Assignment success rate: {(unassignedFlightsCount > 0 ? (assignedCount * 100.0 / unassignedFlightsCount) : 0):F2}%");
-} 
+}
 
 // Method to get special request code dynamically
 string GetSpecialRequestCode(Flight flight)
@@ -805,12 +805,15 @@ void DisplayTotalFeesPerAirline()
     Console.WriteLine("Total Fees per Airline for Changi Airport Terminal 5");
     Console.WriteLine("=============================================");
 
-    // Check that are flights have been assigned to boarding gates
-    if (boardingGates.Values.Any(bg => bg.Flight == null))
+    // Check that all flights have been assigned to boarding gates (Not all boarding gates are assigned)
+    foreach (var airline in airlines)
     {
-        Console.WriteLine("Not all flights have been assigned to boarding gates.");
-        Console.WriteLine("Ensure all flights have thier boarding gate assigned before running this feature again.");
-        return;
+        if (airline.Value.Flights.Values.Any(f => !BoardingGateLookup.ContainsKey(f.FlightNumber)))
+        {
+            Console.WriteLine("Not all flights have been assigned to boarding gates.");
+            Console.WriteLine("Ensure all flights have their boarding gate assigned before running this feature again.");
+            return;
+        }
     }
 
     double subtotalFees = 0;
@@ -818,7 +821,7 @@ void DisplayTotalFeesPerAirline()
     double totalDiscount = 0;
 
     // Display header 
-    Console.WriteLine("{0,-20} {1,-20} {2,-20} {3,-20}", "Airline Name", "Subtotal", "Subtotal of Discounts", "Final Total");
+    Console.WriteLine("{0,-20} {1,-20} {2,-30} {3,-20}", "Airline Name", "Subtotal", "Subtotal of Discounts", "Final Total");
     // Iterate through each airline
     foreach (var airline in airlines.Values)
     {
@@ -827,7 +830,7 @@ void DisplayTotalFeesPerAirline()
         // Iterate through each flight in the airline
         foreach (var flight in airline.Flights.Values)
         {
-           subtotal += flight.CalculateFees(); // Calculate subtotal for each flight and add them up
+            subtotal += flight.CalculateFees(); // Calculate subtotal for each flight and add them up
         }
 
 
@@ -838,8 +841,8 @@ void DisplayTotalFeesPerAirline()
         double subtotalDiscount = subtotal - finalFees;
 
         // Display airline name, subtotal, subtotal of discounts and final total
-        Console.WriteLine("{0,-20} {1,-20} {2,-20} {3,-20}", airline.Name, subtotal, subtotalDiscount, finalFees);
-        Console.WriteLine("=============================================");
+        Console.WriteLine("{0,-20} {1,-20} {2,-30} {3,-20}", airline.Name, subtotal, subtotalDiscount, finalFees);
+        Console.WriteLine("------------------------------------------------------------------------------------");
 
         // Add to total fees and total discount
         subtotalFees += subtotal;
@@ -862,8 +865,6 @@ InitAirlines();
 InitBoardingGates();
 InitFlights();
 
-
-ProcessUnassignedFlights(UnassignedFlights);
 bool trueornot = true;
 while (trueornot == true)
 {
@@ -908,7 +909,7 @@ while (trueornot == true)
                 DisplayScheduledFlights();
                 break;
             case 8:
-                ProcessUnassignedFlights(UnassignedFlights);
+                ProcessUnassignedFlights();
                 break;
             case 9:
                 DisplayTotalFeesPerAirline();
@@ -922,7 +923,7 @@ while (trueornot == true)
                 break;
         }
     }
-    
+
     catch (FormatException)
     {
         Console.WriteLine("Invalid input. Please try again.");
@@ -931,8 +932,8 @@ while (trueornot == true)
     {
         Console.WriteLine("Invalid input. Please try again.");
     }
-        
-        
+
+
 }
 
 
