@@ -755,11 +755,13 @@ void ProcessUnassignedFlights(Queue<Flight> unassignedFlights)
 
         if (!string.IsNullOrEmpty(specialRequestCode))
         {
-            assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null && SupportsSpecialCode(bg, specialRequestCode));
+            var gatePair = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null && SupportsSpecialCode(bg.Value, specialRequestCode));
+            assignedGate = gatePair.Equals(default(KeyValuePair<string, BoardingGate>)) ? null : gatePair.Value; // Ensure null safety to avoid NullReferenceException
+
         }
         else
         {
-            assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null);
+            assignedGate = boardingGates.FirstOrDefault(bg => bg.Value.Flight == null).Value;
         }
 
         if (assignedGate != null)
@@ -906,7 +908,7 @@ while (trueornot == true)
                 DisplayScheduledFlights();
                 break;
             case 8:
-                ProcessUnassignedFlights();
+                ProcessUnassignedFlights(UnassignedFlights);
                 break;
             case 9:
                 DisplayTotalFeesPerAirline();
