@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+//==========================================================
+// Student Number : S10267163
+// Student Name : Caden Wong
+// Partner Name : Aidan Foo
+//==========================================================
 namespace PRG2REAL_assignment
 {
     class BoardingGate
